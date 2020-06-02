@@ -1,163 +1,189 @@
 import random
-
-
-keys = {"Где в Древней Греции можно было увидеть надпись: 'Здесь \
-живут мертвые, и говорят немые'?": "На кладбище/В библиотеках/В тюрьмах/В больницах",\
-"Что означает аббревиатура 'ИМХО', которая часто встречается в интернет-общении?": \
-"Несмотря на авторитеты/Уточняя подробности/По моему мнению/Вопреки вышеизложенному", \
-"Сколько морей омывают Балканский полуостров?": "3/4/5/6", "Каким символом в таблице \
-Менделеева обозначается мышьяк?": "Ms/As/HI/Mt", "Какое событие произошло 14 июля \
-1789 года?": "Великая английская революция/Захват Цейлона англичанами/Термидорианский\
- переворот/Великая французская революция", "Кто совершил первое кругосветное путешествие?":\
-"Фернан Магеллан/Васко да Гама/Джеймс Кук/Христофор Колумб", "Кого или что изучает герпетолог?":\
-"Бабочек/Черепах/Лекарственные травы/Герпес", "Кто написал 'Сотворение Адама'?":\
-"Микеланджело/Боттичелли/Тициан/Рафаэль", "В честь какого растения область \
-Фриули-Венеция-Джулия в Италии ежегодно проводит трёхмесячный фестиваль?": \
-"Лук/Фасоль/Спаржа/Артишок", "Какая из героинь литературных произведений \
-жила во Дворце Контарини-Фазан?": "Джульетта/Дездемона/Офелия/Катарина"}
+import time
 
 
 def intro():
-    print("\t", "Привет, мой милый друг! И добро пожаловать на новую \
+    print("Привет, мой милый друг! И добро пожаловать на новую \
 и продвинутую игру 'Кто хочет стать миллионером?'. Я - новый ведущий \
 этой замечательной программы. Моё имя Владимир Владимирович, но для \
 вас я Господин На Века.", "\n\t", "У вас всегда есть возможность взять \
 подсказку или сдаться и забрать деньги. Приступим?")
     name = input("Введите ваше имя: ")
-    print("Добро пожаловать в игру, ", name)
+    print("Добро пожаловать в игру, " + name + '!')
+    answer = input('Хотите прочитать правила игры до ее начала? ')
+    if answer.lower() == 'да':
+        print('\n','Привет!','\n', 'Предлагаем тебе сыграть в игру «Кто хочет стать миллионером?». \
+Тебе будут задаваться вопросы, а за каждый правильный ответ на твой счёт будет начисляться по 100 000 рублей.','\n',\
+'На каждый вопрос даётся 4 возможных варианта ответа, но правильный только один.','\n',\
+'Чтобы ответить на вопрос, напиши букву, под которой написан твой ответ. \
+Если ты отвечаешь неверно, твой выигрыш обнуляется и ты покидаешь игру. \
+Во время игры ты можешь воспользоваться 3 подсказками: «50/50», «право на ошибку» и «звонок другу». \
+Каждой подсказкой можно воспользоваться только один раз.','\n',\
+'Подсказка «50/50»: из 4 ответов остаётся только 2, один из которых правильный. \
+Тебе нужно выбрать один из оставшихся ответов.','\n',\
+'Подсказка «право на ошибку»: если ты отвечаешь на вопрос неправильно, у тебя есть ещё \
+одна попытка ответить.','\n',\
+'Подсказка «звонок другу»: ты можешь обратиться за помощью к другу (к нашему чат-боту), \
+который поможет ответить тебе на вопрос правильно.','\n',\
+'В случае, если ты ответил правильно на 5 вопросов, тебе будет предложено сыграть \
+в суперигру, где ты сможешь утроить свой выигрыш и забрать 1 500 000 рублей.', '\n',\
+'В суперигре задаются вопросы без вариантов ответов. Тебе нужно будет самому написать \
+правильный ответ. В случае ошибки твой выигрыш обнуляется и ты покидаешь игру.','\n',\
+'Если ты не хочешь принимать участие в суперигре, можно продолжить играть на уровне \
+с вариантами ответа и выиграть 1 000 000 рублей.','\n',\
+'Удачи!')
+    time.sleep(3)
+    return name
 
+def open_file():
+    with open('вопросы.txt', encoding="utf-8") as file:
+        lines = file.readlines()
+        random_lines = []
+        for i in range(1, 11):
+            rand_ques = random.choice(lines)
+            random_lines.append(rand_ques)
+            i += 1
+        questions = {}
+        for line in random_lines:
+            ques, ans = line.split("|")
+            ans = ans.replace("\n", "")
+            questions[ques] = ans
+        return questions
+
+def open_right():
+    with open("прав ответ.txt", encoding="utf-8") as file_right:
+        lines = file_right.readlines()
+        right_answers = {}
+        for line in lines:
+            ques, ans = line.split("|")
+            ans = ans.replace("\n", "")
+            right_answers[ques] = ans
+        return right_answers
+
+def open_help():
+    with open("помощь друга.txt", encoding="utf-8") as file_help:
+        lines = file_help.readlines()
+        friend_answer = {}
+        for line in lines:
+            ques, ans = line.split("|")
+            ans = ans.replace("\n", "")
+            friend_answer[ques] = ans
+        return friend_answer
 
 def answers(key, value):
     print("\n", key)
-    v = value.split("/")
-    n = 1
-    for i in v:
-        if n == 1:
-            print("А)", i, end="\t\t")
-            n += 1
-        elif n == 2:
-            print("Б)", i, end="\n")
-            n += 1
-        elif n == 3:
-            print("В)", i, end="\t\t")
-            n += 1
-        elif n == 4:
-            print("Г)", i, end="\n")
+    values = value.split(", ")
+    print('{}\t\t\t{}'.format(values[0], values[1]))
+    print('{}\t\t\t{}'.format(values[2], values[3]))
 
     
-def right_answer(key, value):
-    right = {"Где в Древней Греции можно было увидеть надпись: \
-'Здесь живут мертвые, и говорят немые'?": "В библиотеках", \
-"Что означает аббревиатура 'ИМХО', которая часто встречается \
-в интернет-общении?": "По моему мнению", "Сколько морей омывают \
-Балканский полуостров?": "6", "Каким символом в таблице Менделеева \
-обозначается мышьяк?": "As", "Какое событие произошло 14 июля 1789 года?": \
-"Великая французская революция", "Кто совершил первое кругосветное путешествие?":\
-"Фернан Магеллан", "Кого или что изучает герпетолог?": "Черепах", \
-"Кто написал 'Сотворение Адама'?": "Микеланджело", "В честь какого растения \
-область Фриули-Венеция-Джулия в Италии ежегодно проводит трёхмесячный \
-фестиваль?": "Спаржа", "Какая из героинь литературных произведений жила во \
-Дворце Контарини-Фазан?": "Дездемона"}
-    v = value.split("/")
-    for i in v:
-        if i == right[key]:
-            right_word = i
+def right_answer(key, right_answers):
+    for akey, avalue in right_answers.items():
+        if key == akey:
+            right_word = avalue
             return right_word
 
 
 def fifty(right_word, value):
-    v = value.split("/")
+    values = value.split(", ")
     fifty = []
-    for word in v:
-        if word != right_word:
-            fifty.append(word)
-    print(random.choice(fifty), "\n\t\t", right_word)
+    for i in values:
+        if i.startswith(right_word):
+            first = i
+        else:
+            fifty.append(i)
+    two = [random.choice(fifty), first]
+    two.sort()
+    if two[0].startswith('А') and two[1].startswith('Б'):
+        print(two[0] + '\t\t\t' + two[1])
+    elif two[0].startswith('В') and two[1].startswith('Г'):
+        print('\n' + two[0] + '\t\t\t' + two[1])
+    else:
+        for each in two:
+            if each.startswith('А'):
+                print(each)
+            elif each.startswith('Б'):
+                print('\t\t\t', each)
+            elif each.startswith('В'):
+                print(each)
+            elif each.startswith('Г'):
+                print('\t\t\t', each)
 
 
-def question_friend():
-    print('\t', 'Привет! Меня зовут Иосиф. Я могу подсказать тебе ответ на вопрос. \
-Что ты зочешь узнать?')
+def question_friend(name):
+    print('\n', 'Calling...', '\n')
+    time.sleep(5)
+    print('Иосиф: Привет!')
+    time.sleep(2)
+    input(name + ': ')
+    time.sleep(3)
+    print('Иосиф: Я знаю, что ты на игре "Кто хочет стать миллионером?". Я очень \
+рад, что ты позвонил именно мне. Чем я могу тебе помочь?')
     question = ''
     while question == '':
-        question = input('Задайте ваш вопрос: ')
+        time.sleep(2)
+        question = input(name + ' (задайте ваш вопрос): ')
         if question == '':
             print('Ты не задал вопрос :(')
     return question
 
 
-def answer_friend(question):
-    if question == "Где в Древней Греции можно было увидеть надпись: 'Здесь живут мертвые, и говорят немые'?":
-        print('\t', 'Я думаю, это место связано с книгами.')
-    if question == "Что означает аббревиатура 'ИМХО', которая часто встречается в интернет-общении?":
-        print('\t', 'Я уверен, правильный ответ "по моему мнению".')
-    if question == 'Сколько морей омывают Балканский полуостров?':
-        print('\t', 'На уроке географии мой учитель говорил о 6 морях.')
-    if question == 'Каким символом в таблице Менделеева обозначается мышьяк?':
-        print('\t', 'Хм, я не уверен, но мне кажется, As.')
-    if question == 'Какое событие произошло 14 июля 1789 года?':
-        print('\t', 'Ооо, история, мой любимый школьный предмет. В этот день произошла Великая французская революция.')
-    if question == 'Кто совершил первое кругосветное путешествие?':
-        print('\t', 'По-моему, Фернан Магеллан.')
-    if question == 'Кого или что изучает герпетолог?':
-        print('\t', 'Хм, мне кажется, черепах.')
-    if question == "Кто написал 'Сотворение Адама'?":
-        print('\t', 'Да это же мой любимый итальянский художник Микеланджело.')
-    if question == 'В честь какого растения область Фриули-Венеция-Джулия \
-в Италии ежегодно проводит трёхмесячный фестиваль?':
-        print('\t', 'О, я там был. Я помню, что во все блюда добавляли какое-то зеленое растение. Спаржу?')
-    if question == 'Какая из героинь литературных произведений жила во \
-Дворце Контарини-Фазан?':
-        print('\t', 'Это произведение Шекспира - одно из моих любимых! Определенно в Палаццо \
-Контарини-Фазан жила возлюбленная Отелло - Дездемона.')
+def answer_friend(question, friend_answer):
+    for key, value in friend_answer.items():
+        if question == key:
+            time.sleep(3)
+            print('Иосиф: ', value)
 
 
-def help_me(fifty, right_word, value):
+def help_me(fifty, right_word, value, name, hint, hints):
+    
     answer = input("Хотите подсказку? ")
     if answer.lower() == "да":
-        choice = input("Какую подсказку: 50/50, звонок другу, право на ошибку? ")
+        choice = input(hint)
         if choice.lower() == "50/50":
             fifty(right_word, value)
+            hints.append('fifty')
             return "50/50"
         if choice.lower() == "право на ошибку":
+            hints.append('mistake')
             return "mistake"
         if choice.lower() == "звонок другу":
-            q_f = question_friend()
-            answer_friend(q_f)
+            hints.append('call')
+            q_f = question_friend(name)
+            f_a = open_help()
+            answer_friend(q_f, f_a)
             return "call"
             
             
 def player_answer(right_word, help_me):
     answer = input("Введите ваш ответ: ")
+    time.sleep(5)
     if answer == right_word:
-        print("Правильно!")
+        print('\n' + "Правильно!")
         return "+"
     if not answer == right_word:
-        print("К сожалению, вы проиграли.")
+        print('\n', "К сожалению, вы проиграли.")
         return "-"
 
 
 def take_money():
     desition = input("Хотите закончить игру и забрать деньги? ")
-    desition.lower()
-    if desition == "да":
+    if desition.lower() == "да":
         return "-"
     else:
         pass
 
 
 def super_game():
-    questions_sg = ("Какая мышца в теле человека самая крупная?", "Эта женщина \
-в виде исключения дважды была лауреатом Нобелевской премии. Назовите ее.", "Какое \
-озеро на Земле является единственным, которое состоит из пресной и соленой воды?",
-"Что в переводе с греческого означает 'комета'?", "Какое растение считалось \
-священным у славян и отвечало за силу и достаток?")
-    right_sg = {"Какая мышца в теле человека самая крупная? ": "Большая ягодичная",\
-"Эта женщина в виде исключения дважды была лауреатом Нобелевской премии. \
-Назовите ее.": "Мария Склодовская-Кюри", "Какое озеро на Земле является \
-единственным, которое состоит из пресной и соленой воды?": "Балхаш", "Что \
-в переводе с греческого означает 'комета'?": "Хвостатая звезда", "Какое \
-растение считалось священным у славян и отвечало за силу и достаток?": "Дуб"}
-    for k, v in right_sg.items():
+    with open("суперигра.txt", encoding="utf-8") as file_super:
+        lines = file_super.readlines()
+        super_game = {}
+        for line in lines:
+            ques, ans = line.split("|")
+            ans = ans.replace("\n", "")
+            super_game[ques] = ans
+    
+    for k, v in super_game.items():
         print("\n", k)
         answer = input("Ваш ответ: ")
         if answer == v:
@@ -170,25 +196,44 @@ def super_game():
                     
 
 def main():
-    intro()
+    name = intro()
     money = 0
+    hints = []
+    
+    questions = open_file()
+    right_answers = open_right()
+    friend_answer = open_help()
+    hint = 'Какую подсказку: 50/50, звонок другу, право на ошибку? '
 
-    for key, value in keys.items():
+    for key, value in questions.items():
         answers(key, value)
-        right_word = right_answer(key, value)
-        h_m = help_me(fifty, right_word, value)
-            
+        right_word = right_answer(key, right_answers)
+        h_m = help_me(fifty, right_word, value, name, hint, hints)
+        if 'fifty' in hints:
+            hint = 'Какую подсказку: звонок другу, право на ошибку? '
+        if 'call' in hints:
+            hint = 'Какую подсказку: 50/50, право на ошибку? '
+        if 'mistake' in hints:
+            hint = 'Какую подсказку: 50/50, звонок другу? '
+        if 'fifty' in hints and 'call' in hints:
+            hint = 'Какую подсказку: право на ошибку? '
+        if 'fifty' in hints and 'mistake' in hints:
+            hint = 'Какую подсказку: звонок другу? '
+        if 'call' in hints and 'mistake' in hints:
+            hint = 'Какую подсказку: 50/50? '
+        if 'fifty' in hints and 'mistake' in hints and 'call' in hints:
+            hint = 'Вы больше не можете пользоваться подсказками! '
         p_a = player_answer(right_word, help_me)
+
         if h_m == "mistake" and p_a == "-":
             print("Попробуйте еще раз!")
             p_a = player_answer(right_word, help_me)
 
-       
         if p_a == "+":
             money += 100000
             print("Ваши деньги:", money, "рублей.", "\n")
             if money == 500000:
-                des = input("Хотите сыграть в супер игру? Поставить свои 500.000 \
+                des = input("Хотите сыграть в суперигру? Поставить свои 500.000 \
 рублей и утроить сумму в случае победы? ")
                 if des.lower() == "да":
                     s_g = super_game()
@@ -201,18 +246,32 @@ def main():
                         break
                 else:
                     pass
-            pass
-        else:
-            break
-        if money < 1000000:
-            t_m = take_money()
-            if t_m:
-                print("Поздравляю, ваш выигрыш: ", money, "рублей. До свидания!")
-                break
-        else:
-            print("Невероятно! Вы только что выиграли в игру 'Кто хочет стать миллионером?' \
+            if money < 1000000:
+                t_m = take_money()
+                if t_m:
+                    print("Поздравляю, ваш выигрыш: ", money, "рублей. До свидания!")
+                    break
+            if money == 1000000:
+                print("Невероятно! Вы только что выиграли в игру 'Кто хочет стать миллионером?' \
 не 200 тысяч, не 500 тысяч, а целый 1 миллион рублей! Вы стали сильнее, мудрее и определенно \
 богаче! Был очень рад с вами познакомиться, до свиданья!")
+                break
+        else:
+            print('\n', 'Правильный ответ был:')
+            value = value.split(", ")
+            for i in value:
+                if i.startswith(right_word):
+                    right_word = i
+            if right_word.startswith('А'):
+                print(right_word, '\n')
+            if right_word.startswith('Б'):
+                print('\t\t', right_word, '\n')
+            if right_word.startswith('В'):
+                print('\n', right_word)
+            if right_word.startswith('Г'):
+                print('\n\t\t', right_word)
+            break
+        
 
 
 if __name__ == "__main__":
